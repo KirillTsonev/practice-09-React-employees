@@ -11,9 +11,9 @@ class App extends Component {
         super(props)
         this.state = {
             data: [
-                {name: "John Doe", salary: 800, increase: true, id: 1},
-                {name: "Steve Smith", salary: 3000, increase: false, id: 2},
-                {name: "Carlos Magnusen", salary: 5000, increase: false, id: 3},
+                {name: "John Doe", salary: 800, increase: true, promotion: true, id: 1},
+                {name: "Steve Smith", salary: 3000, increase: false, promotion: false, id: 2},
+                {name: "Carlos Magnusen", salary: 5000, increase: false, promotion: false, id: 3},
             ]
         }
         this.maxId = 4
@@ -32,7 +32,8 @@ class App extends Component {
             name,
             salary,
             increase: false,
-            id: this.maxId++
+            promotion: false,
+            id: this.maxId++,
         }
         this.setState(({data}) => {
             const newArr = [...data, newItem]
@@ -42,11 +43,27 @@ class App extends Component {
         })
     }
 
+    onToggleProp = (id, prop) => {
+        this.setState(({data}) => ({
+            data: data.map(a => {
+                if (a.id === id) {
+                    return {...a, [prop]: !a[prop]}
+                }
+                return a
+            })
+        }))
+    }
+
     render() {
+        const total = this.state.data.length
+        const increaseTotal = this.state.data.filter(a => a.increase === true).length
+
         return (
             <div className="app">
-                <AppInfo/>
-    
+                <AppInfo
+                    increaseTotal={increaseTotal}
+                    total={total}/>
+
                 <div className="search-panel">
                     <SearchPanel/>
     
@@ -55,6 +72,7 @@ class App extends Component {
     
                 <EmployeesList
                     data={this.state.data}
+                    onToggleProp={this.onToggleProp}
                     onDelete={this.deleteItem}/>
                 <EmployeesAddForm
                     onAdd={this.addItem}/>
