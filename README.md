@@ -1,1 +1,1 @@
-A simple CRUD React SPA made with class-based components.
+A simple CRUD React SPA made with class components.
